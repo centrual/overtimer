@@ -6,8 +6,9 @@
 - Better documentation
 
 ## 0.0.3 - 07.04.2017
-- Bugfix for shorthand onFinishCallback and debug variable
+- Bugfix for shorthand onFinishCallback and debug option.
 - test/tests/very_simple.js is now simpler.
+- All files linted.
 
 ## 0.0.2 - 07.04.2017
 - Added pause and resume methods.
