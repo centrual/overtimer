@@ -4,6 +4,11 @@
   "description": "Mission critical updateable javascript timer. It can handle overtimes also limits.",
   "main": "dist/overtimer.min.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/centrual/overtimer.git"
+  },
+  "bugs": "https://github.com/centrual/overtimer/issues",
   "scripts": {
     "test": "node test/index.js",
     "build": "node_modules/.bin/babel src/overtimer.js -o dist/overtimer.js --source-maps && npm run uglify",
