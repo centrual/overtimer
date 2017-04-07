@@ -1,9 +1,14 @@
 ## Next version targets
 - Dynamically add, remove duration to timer.
-- Overtime feature.
-- Add unit tests
-- Add code coverage
-- Better documentation
+- Reset and destroy methods.
+- Add unit tests.
+- Add code coverage.
+- Better documentation.
+
+## 0.1.1 - 07.04.2017
+- Overtime feature added.
+- Added bump(overtime) test.
+- Added custom poll time option for performant UI updates.
 
 ## 0.1.0 - 07.04.2017
 - Added delay option.

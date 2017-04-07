@@ -2,4 +2,5 @@
 // require('./tests/repeat')
 // require('./tests/infinite_repeat')
 // require('./tests/pause_resume')
-require('./tests/delay')
+// require('./tests/delay')
+require('./tests/bump')

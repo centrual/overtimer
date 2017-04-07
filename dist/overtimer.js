@@ -88,11 +88,16 @@ function Overtimer() {
   var defaults = {
     duration: 1000,
 
+    poll: 50,
     delay: 0,
     repeat: 1,
     debug: true,
-    start: true
+    start: true,
+
+    overtimeLimit: 0,
+    overtimeBump: 0
   };
+
   this.eventHandlers = {
     'start': [],
     'tick': [],
@@ -101,9 +106,11 @@ function Overtimer() {
     'resume': [],
     'delaystart': [],
     'delayend': [],
+    'bump': [],
     'repeat': [],
     'finish': [],
-    'update': []
+    'update': [],
+    'poll': []
   };
 
   if ((typeof opts === 'undefined' ? 'undefined' : _typeof(opts)) === 'object') {
@@ -128,7 +135,7 @@ function Overtimer() {
   }
 
   // Properties
-  this.version = '0.1.0';
+  this.version = '0.1.1';
   this.globalTimerId = null;
   this.state = Overtimer.STATES.CREATED;
 
@@ -142,9 +149,11 @@ function Overtimer() {
   this.finishedAt = -1;
   this.pausedAt = -1;
   this.resumedAt = -1;
+  this.bumpedAt = -1;
 
   this.pausedTime = -1;
   this.delayedTime = -1;
+  this.overTime = -1;
   this.elapsedTime = -1;
   this.remainingTime = -1;
   this.totalDelayedTime = -1;
@@ -153,6 +162,7 @@ function Overtimer() {
   this.currentRepeat = -1;
 
   this.timesUpdatedAt = -1;
+  this.lastPollAt = -1;
 
   if (typeof finishEvent === 'function') this.on('finish', finishEvent);
 
@@ -230,7 +240,11 @@ Overtimer.prototype.off = function (eventName) {
  * @return {boolean} Returns true if succeeded, false if not
  */
 Overtimer.prototype.trigger = function (eventName) {
-  var payload = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var _this = this;
+
+  for (var _len = arguments.length, payload = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    payload[_key - 1] = arguments[_key];
+  }
 
   if (typeof eventName !== 'string') {
     this.log('Event name must be string.', 1006);
@@ -243,15 +257,8 @@ Overtimer.prototype.trigger = function (eventName) {
     return false;
   }
 
-  if (typeof payload !== 'undefined' && !Array.isArray(payload)) {
-    payload = [payload];
-  } else if (typeof payload === 'undefined') {
-    this.log('Payload comes undefined.', 1009);
-    payload = [];
-  }
-
   this.eventHandlers[eventName.toLowerCase()].forEach(function (evt) {
-    evt.apply(payload);
+    evt.call.apply(evt, [_this].concat(payload));
   });
 
   return true;
@@ -289,6 +296,11 @@ Overtimer.prototype.tickMainInterval = function () {
 
   this.trigger('update');
 
+  if (this.lastPollAt + this.options.poll < Date.now()) {
+    this.trigger('poll');
+    this.lastPollAt = Date.now();
+  }
+
   if (this.remainingTime < 1) this.tick();
 };
 
@@ -298,6 +310,53 @@ Overtimer.prototype.tickMainInterval = function () {
 Overtimer.prototype.leaveFromMainInterval = function () {
   Overtimer.global.leave(this.globalTimerId);
   this.globalTimerId = null;
+};
+
+/**
+ * Increases the current timer's duration to within the maximum timeout limit.
+ * @param customValue {number} Custom duration for bump duration. OvertimeBump option will use if not specified.
+ * @return {boolean} true if bump success, false if not
+ */
+Overtimer.prototype.bump = function () {
+  var customValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;
+
+  if (this.state === Overtimer.STATES.STOPPED || this.state === Overtimer.STATES.CREATED) {
+    this.log('Can\'t use overtime bump on stopped or created state.');
+    return false;
+  } else if (typeof this.options.overtimeLimit !== 'number' || this.options.overtimeLimit <= 0) {
+    this.log('Can\'t use overtime bump when overtime limit below 0.');
+    return false;
+  }
+
+  var mustBumpFor = typeof customValue === 'number' && customValue > 0 ? customValue : this.options.overtimeBump;
+
+  if (typeof mustBumpFor !== 'number' || mustBumpFor <= 0) {
+    this.log('Bump value is not valid! Must be number and bigger than 0 for bump:');
+    this.log(mustBumpFor);
+    return false;
+  }
+
+  var maxBump = this.options.overtimeLimit - this.remainingTime;
+
+  if (maxBump < 0) {
+    this.log('Timer not reached the overtime limit yet.');
+    return false;
+  } else if (mustBumpFor < maxBump) {
+    this.remainingTime += mustBumpFor;
+    this.totalRemainingTime += mustBumpFor;
+    this.overTime += mustBumpFor;
+
+    this.trigger('bump', mustBumpFor, this.remainingTime);
+  } else {
+    this.remainingTime += maxBump;
+    this.totalRemainingTime += maxBump;
+    this.overTime += maxBump;
+
+    this.trigger('bump', maxBump, this.remainingTime);
+  }
+
+  this.bumpedAt = Date.now();
+  return true;
 };
 
 /**
@@ -320,11 +379,13 @@ Overtimer.prototype.start = function () {
   this.startedAt = Date.now();
   this.elapsedTime = 0;
   this.totalElapsedTime = 0;
+  this.overTime = 0;
   this.remainingTime = this.options.duration;
   this.totalRemainingTime = this.options.duration * this.options.repeat;
   this.currentRepeat = 1;
 
   this.timesUpdatedAt = Date.now();
+  this.lastPollAt = Date.now();
 
   this.joinToMainInterval();
   this.trigger('start');
