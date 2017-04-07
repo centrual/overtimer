@@ -29,7 +29,8 @@ Please check `test/tests` folder for examples.
   myTimer.on('repeat', function() { /* ... */ })
   myTimer.on('update', function() { /* ... */ })
   
-  myTimer.off('start|tick|stop|repeat|update', handlerFunction = null)
+  // Event name can be start, tick, pause, resume, finish, stop, repeat and update
+  myTimer.off('Event name', handlerFunction = null)
   
   // Public methods
   myTimer.start()
