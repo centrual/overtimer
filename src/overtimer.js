@@ -122,6 +122,7 @@ Overtimer.prototype.off = function( eventName, func = null ) {
  * @param eventName {string} Event name you want to trigger
  * @param payload {object} payload for trigger. can be array, or can be object
  * @return {boolean} Returns true if succeeded, false if not
+ * @private
  */
 Overtimer.prototype.trigger = function(eventName, payload=[]) {
   if (typeof eventName !== 'string') {
