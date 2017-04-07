@@ -35,7 +35,7 @@ Please check `test/tests` folder for examples.
   myTimer.pause()
   myTimer.resume()
   myTimer.repeat()
-  myTimer.bump()
+  myTimer.bump(customValue = -1)
   myTimer.endDelay()
   myTimer.tick()
   
