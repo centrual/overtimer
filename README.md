@@ -22,6 +22,9 @@ Please check `test/tests` folder for examples.
   
   myTimer.on('start', function() { /* ... */ })
   myTimer.on('tick', function() { /* ... */ })
+  myTimer.on('pause', function() { /* ... */ })
+  myTimer.on('resume', function() { /* ... */ })
+  myTimer.on('finish', function() { /* ... */ })
   myTimer.on('stop', function() { /* ... */ })
   myTimer.on('repeat', function() { /* ... */ })
   myTimer.on('update', function() { /* ... */ })
@@ -31,6 +34,8 @@ Please check `test/tests` folder for examples.
   // Public methods
   myTimer.start()
   myTimer.stop()
+  myTimer.pause()
+  myTimer.resume()
   myTimer.repeat()
   myTimer.tick()
   
@@ -44,7 +49,7 @@ Please check `test/tests` folder for examples.
   Overtimer.STATES = {
     CREATED: 0,
     RUNNING: 1,
-    PAUSED: 2, // I will add soon
+    PAUSED: 2,
     STOPPED: 3
   }
   

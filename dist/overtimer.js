@@ -27,7 +27,10 @@ function Overtimer() {
     'start': [],
     'tick': [],
     'stop': [],
+    'pause': [],
+    'resume': [],
     'repeat': [],
+    'finish': [],
     'update': []
   };
 
@@ -42,6 +45,7 @@ function Overtimer() {
   this.options = Object.assign({}, defaults, opts);
 
   // Properties
+  this.version = '0.0.2';
   this.globalTimerId = null;
   this.state = Overtimer.STATES.CREATED;
 
@@ -50,7 +54,10 @@ function Overtimer() {
   this.repeatedAt = -1;
   this.tickedAt = -1;
   this.stoppedAt = -1;
+  this.pausedAt = -1;
+  this.resumedAt = -1;
 
+  this.pausedTime = -1;
   this.elapsedTime = -1;
   this.remainingTime = -1;
   this.totalElapsedTime = -1;
@@ -131,6 +138,7 @@ Overtimer.prototype.off = function (eventName) {
  * @param eventName {string} Event name you want to trigger
  * @param payload {object} payload for trigger. can be array, or can be object
  * @return {boolean} Returns true if succeeded, false if not
+ * @private
  */
 Overtimer.prototype.trigger = function (eventName) {
   var payload = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
@@ -176,10 +184,14 @@ Overtimer.prototype.tickMainInterval = function () {
   var now = Date.now(),
       diff = now - this.timesUpdatedAt;
 
-  this.elapsedTime += diff;
-  this.remainingTime -= diff;
-  this.totalElapsedTime += diff;
-  this.totalRemainingTime -= diff;
+  if (this.state === Overtimer.STATES.RUNNING) {
+    this.elapsedTime += diff;
+    this.remainingTime -= diff;
+    this.totalElapsedTime += diff;
+    this.totalRemainingTime -= diff;
+  } else if (this.state === Overtimer.STATES.PAUSED) {
+    this.pausedTime += diff;
+  }
 
   this.timesUpdatedAt = now;
 
@@ -223,6 +235,37 @@ Overtimer.prototype.start = function () {
 };
 
 /**
+ * Pauses the timer
+ * @return {boolean} true if succeeded, false if not
+ */
+Overtimer.prototype.pause = function () {
+  if (this.state !== Overtimer.STATES.RUNNING) {
+    this.log("Can't pause when timer not running.", 1020);
+    return false;
+  }
+
+  this.state = Overtimer.STATES.PAUSED;
+  this.pausedAt = Date.now();
+
+  return true;
+};
+
+/**
+ * Resumes the paused timer
+ * @return {boolean} true if succeeded, false if not
+ */
+Overtimer.prototype.resume = function () {
+  if (this.state !== Overtimer.STATES.PAUSED) {
+    this.log("Can't resume when timer not paused.", 1021);
+    return false;
+  }
+  this.state = Overtimer.STATES.RUNNING;
+  this.resumedAt = Date.now();
+
+  return true;
+};
+
+/**
  * Repeats the loop
  * @return {boolean} Returns true if succeeded, false if not
  */
@@ -250,7 +293,10 @@ Overtimer.prototype.tick = function () {
   this.tickedAt = Date.now();
   this.trigger('tick');
 
-  if (this.currentRepeat < this.options.repeat) this.repeat();else this.stop();
+  if (this.currentRepeat < this.options.repeat) this.repeat();else {
+    this.trigger('finish');
+    this.stop();
+  }
 };
 
 /**
