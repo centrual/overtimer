@@ -15,12 +15,13 @@ Please check `test/tests` folder for examples.
   // All time values calculated in milliseconds
   const myTimer = new Overtimer(duration = 10000, {
     // Defaults
+    delay: 0,
     repeat: 1,
     debug: false,
     start: true
   }, onFinishCallback = null)
   
-  // Event name can be: start, tick, pause, resume, finish, stop, repeat, update
+  // Event name can be: start, tick, pause, resume, finish, stop, repeat, update, delaystart, delayend
   myTimer.on('Event name', function() { /* ... */ })
   myTimer.off('Event name', handlerFunction = null)
   
@@ -30,6 +31,7 @@ Please check `test/tests` folder for examples.
   myTimer.pause()
   myTimer.resume()
   myTimer.repeat()
+  myTimer.endDelay()
   myTimer.tick()
   
   // Private methods ( Don't use this methods if you don't know what you doing )
@@ -38,12 +40,34 @@ Please check `test/tests` folder for examples.
   myTimer.leaveFromMainInterval()
   myTimer.trigger(eventName, payload=[])
   
+  // Variables can read
+  myTimer.createdAt
+  myTimer.startedAt
+  myTimer.delayStartedAt
+  myTimer.delayEndedAt
+  myTimer.repeatedAt
+  myTimer.tickedAt
+  myTimer.stoppedAt
+  myTimer.finishedAt
+  myTimer.pausedAt
+  myTimer.resumedAt
+  
+  myTimer.pausedTime
+  myTimer.delayedTime
+  myTimer.elapsedTime
+  myTimer.remainingTime
+  myTimer.totalDelayedTime
+  myTimer.totalElapsedTime
+  myTimer.totalRemainingTime
+  myTimer.currentRepeat
+  
   // Global Objects
   Overtimer.STATES = {
     CREATED: 0,
-    RUNNING: 1,
-    PAUSED: 2,
-    STOPPED: 3
+    WAITING: 1
+    RUNNING: 2,
+    PAUSED: 3,
+    STOPPED: 4
   }
   
   Overtimer.global = {}

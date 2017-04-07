@@ -1,4 +1,69 @@
 /**
+ * Enum for Overtimer states.
+ * @type {{CREATED: number, WAITING: number, RUNNING: number, PAUSED: number, STOPPED: number}}
+ */
+Overtimer.STATES = {
+  CREATED: 0,
+  WAITING: 1,
+  RUNNING: 2,
+  PAUSED: 3,
+  STOPPED: 4
+}
+
+/**
+ * Global timer object for performance.
+ */
+Overtimer.global = {
+  callbacks: [],
+  timer: null,
+  updateMs: 1,
+  lastId: 0,
+  
+  /**
+   * Joins the global timer list
+   * @param callback {function} Callback function will trigger ~ every ms
+   * @return {Number} Unique timer id for leave.
+   */
+  join(callback) {
+    let found = Overtimer.global.callbacks.find(f => f.callback === callback)
+    
+    if (typeof found === 'undefined') {
+      Overtimer.global.lastId += 1
+      Overtimer.global.callbacks.push({callback, id: Overtimer.global.lastId})
+    } else {
+      return found.id
+    }
+    
+    if (Overtimer.global.timer === null)
+      Overtimer.global.timer = setInterval(Overtimer.global.tick, Overtimer.global.updateMs)
+    
+    return Overtimer.global.lastId
+  },
+  
+  /**
+   * Leaves from global timer list
+   * @param id {number} Auto generated id from join for leave.
+   */
+  leave(id) {
+    Overtimer.global.callbacks = Overtimer.global.callbacks.filter(c => c.id !== id)
+    
+    if (Overtimer.global.callbacks.length === 0 && Overtimer.global.timer !== null) {
+      clearInterval(Overtimer.global.timer)
+      Overtimer.global.timer = null
+    }
+  },
+  
+  /**
+   * Callback trigger function for every ms
+   */
+  tick() {
+    Overtimer.global.callbacks.forEach((cb) => {
+      cb.callback()
+    })
+  }
+}
+
+/**
  * Overtimer constructor.
  * @param duration {Number} Duration of timer
  * @param opts {Object} Overtimer options
@@ -10,6 +75,7 @@ function Overtimer(duration = 1000, opts = {}, onFinish = null) {
   let defaults = {
     duration: 1000,
     
+    delay: 0,
     repeat: 1,
     debug: true,
     start: true
@@ -20,6 +86,8 @@ function Overtimer(duration = 1000, opts = {}, onFinish = null) {
     'stop': [],
     'pause': [],
     'resume': [],
+    'delaystart': [],
+    'delayend': [],
     'repeat': [],
     'finish': [],
     'update': []
@@ -43,24 +111,31 @@ function Overtimer(duration = 1000, opts = {}, onFinish = null) {
   } else if (duration <= 0) {
     this.log('Duration must be bigger than 0.', 1001)
     this.options.duration = 1000
+  } else {
+    this.options.duration = duration
   }
   
   // Properties
-  this.version = '0.0.3'
+  this.version = '0.1.0'
   this.globalTimerId = null
   this.state = Overtimer.STATES.CREATED
   
   this.createdAt = Date.now()
   this.startedAt = -1
+  this.delayStartedAt = -1
+  this.delayEndedAt = -1
   this.repeatedAt = -1
   this.tickedAt = -1
   this.stoppedAt = -1
+  this.finishedAt = -1
   this.pausedAt = -1
   this.resumedAt = -1
   
   this.pausedTime = -1
+  this.delayedTime = -1
   this.elapsedTime = -1
   this.remainingTime = -1
+  this.totalDelayedTime = -1
   this.totalElapsedTime = -1
   this.totalRemainingTime = -1
   this.currentRepeat = -1
@@ -188,6 +263,12 @@ Overtimer.prototype.tickMainInterval = function () {
     this.totalRemainingTime -= diff
   } else if (this.state === Overtimer.STATES.PAUSED) {
     this.pausedTime += diff
+  } else if (this.state === Overtimer.STATES.WAITING) {
+    this.delayedTime += diff
+    this.totalDelayedTime += diff
+    
+    if (this.delayedTime >= this.options.delay)
+      this.endDelay()
   }
   
   this.timesUpdatedAt = now
@@ -211,12 +292,20 @@ Overtimer.prototype.leaveFromMainInterval = function () {
  * @return {boolean} true if succeeded, false if not
  */
 Overtimer.prototype.start = function () {
-  if (this.state === Overtimer.STATES.RUNNING) {
+  if (this.state === Overtimer.STATES.RUNNING || this.state === Overtimer.STATES.WAITING) {
     this.log('Timer is already started.', 1010)
     return false
   }
   
-  this.state = Overtimer.STATES.RUNNING
+  if (this.options.delay > 0) {
+    this.state = Overtimer.STATES.WAITING
+    this.delayedTime = 0
+    this.totalDelayedTime = 0
+    this.delayStartedAt = Date.now()
+  }
+  else
+    this.state = Overtimer.STATES.RUNNING
+  
   this.startedAt = Date.now()
   this.elapsedTime = 0
   this.totalElapsedTime = 0
@@ -228,6 +317,10 @@ Overtimer.prototype.start = function () {
   
   this.joinToMainInterval()
   this.trigger('start')
+  
+  if (this.options.delay > 0)
+    this.trigger('delaystart')
+  
   return true
 }
 
@@ -236,7 +329,7 @@ Overtimer.prototype.start = function () {
  * @return {boolean} true if succeeded, false if not
  */
 Overtimer.prototype.pause = function () {
-  if (this.state !== Overtimer.STATES.RUNNING) {
+  if (this.state !== Overtimer.STATES.RUNNING && this.state !== Overtimer.STATES.WAITING) {
     this.log("Can't pause when timer not running.", 1020)
     return false
   }
@@ -244,6 +337,22 @@ Overtimer.prototype.pause = function () {
   this.state = Overtimer.STATES.PAUSED
   this.pausedAt = Date.now()
   
+  return true
+}
+
+/**
+ * Ends delay immediately
+ * @return {boolean} return true if succeeded, false if not
+ */
+Overtimer.prototype.endDelay = function () {
+  if (this.state !== Overtimer.STATES.WAITING) {
+    this.log("Can't end delay when timer not waiting.", 1023)
+    return false
+  }
+  
+  this.delayEndedAt = Date.now()
+  this.state = Overtimer.STATES.RUNNING
+  this.trigger('delayend')
   return true
 }
 
@@ -256,9 +365,12 @@ Overtimer.prototype.resume = function () {
     this.log("Can't resume when timer not paused.", 1021)
     return false
   }
-  this.state = Overtimer.STATES.RUNNING
-  this.resumedAt = Date.now()
+  if (this.options.delay > 0 && this.delayedTime < this.options.delay)
+    this.state = Overtimer.STATES.WAITING
+  else
+    this.state = Overtimer.STATES.RUNNING
   
+  this.resumedAt = Date.now()
   return true
 }
 
@@ -267,7 +379,7 @@ Overtimer.prototype.resume = function () {
  * @return {boolean} Returns true if succeeded, false if not
  */
 Overtimer.prototype.repeat = function () {
-  if (this.state !== Overtimer.STATES.RUNNING) {
+  if (this.state !== Overtimer.STATES.RUNNING && this.state !== Overtimer.STATES.WAITING) {
     this.log("Can't repeat when timer not running.", 1012)
     return false
   }
@@ -276,10 +388,20 @@ Overtimer.prototype.repeat = function () {
   this.elapsedTime = 0
   this.remainingTime = this.options.duration
   this.repeatedAt = Date.now()
-  this.totalRemainingTime = ( this.options.repeat * this.options.duration ) - (this.currentRepeat * this.options.duration)
+  this.totalRemainingTime = ( this.options.repeat * this.options.duration ) - ((this.currentRepeat-1) * this.options.duration)
+  
+  if (this.options.delay > 0) {
+    this.delayedTime = 0
+    this.state = Overtimer.STATES.WAITING
+  }
+  else
+    this.state = Overtimer.STATES.RUNNING
   
   this.timesUpdatedAt = Date.now()
   this.trigger('repeat')
+  
+  if (this.options.delay > 0)
+    this.trigger('delaystart')
   return true
 }
 
@@ -293,6 +415,11 @@ Overtimer.prototype.tick = function () {
   if (this.currentRepeat < this.options.repeat)
     this.repeat()
   else {
+    this.finishedAt = Date.now()
+    this.totalRemainingTime = 0
+    this.remainingTime = 0
+    this.stoppedAt = Date.now()
+    
     this.trigger('finish')
     this.stop()
   }
@@ -314,71 +441,6 @@ Overtimer.prototype.stop = function () {
   
   this.trigger('stop')
   return true
-}
-
-
-/**
- * Enum for Overtimer states.
- * @type {{CREATED: number, RUNNING: number, PAUSED: number, STOPPED: number}}
- */
-Overtimer.STATES = {
-  CREATED: 0,
-  RUNNING: 1,
-  PAUSED: 2,
-  STOPPED: 3
-}
-
-/**
- * Global timer object for performance.
- */
-Overtimer.global = {
-  callbacks: [],
-  timer: null,
-  updateMs: 1,
-  lastId: 0,
-  
-  /**
-   * Joins the global timer list
-   * @param callback {function} Callback function will trigger ~ every ms
-   * @return {Number} Unique timer id for leave.
-   */
-  join(callback) {
-    let found = Overtimer.global.callbacks.find(f => f.callback === callback)
-    
-    if (typeof found === 'undefined') {
-      Overtimer.global.lastId += 1
-      Overtimer.global.callbacks.push({callback, id: Overtimer.global.lastId})
-    } else {
-      return found.id
-    }
-    
-    if (Overtimer.global.timer === null)
-      Overtimer.global.timer = setInterval(Overtimer.global.tick, Overtimer.global.updateMs)
-    
-    return Overtimer.global.lastId
-  },
-  
-  /**
-   * Leaves from global timer list
-   * @param id {number} Auto generated id from join for leave.
-   */
-  leave(id) {
-    Overtimer.global.callbacks = Overtimer.global.callbacks.filter(c => c.id !== id)
-    
-    if (Overtimer.global.callbacks.length === 0 && Overtimer.global.timer !== null) {
-      clearInterval(Overtimer.global.timer)
-      Overtimer.global.timer = null
-    }
-  },
-  
-  /**
-   * Callback trigger function for every ms
-   */
-  tick() {
-    Overtimer.global.callbacks.forEach((cb) => {
-      cb.callback()
-    })
-  }
 }
 
 module.exports = Overtimer

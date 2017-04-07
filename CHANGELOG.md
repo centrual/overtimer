@@ -5,6 +5,12 @@
 - Add code coverage
 - Better documentation
 
+## 0.1.0 - 07.04.2017
+- Added delay option.
+- Added delay test.
+- Readme updated
+- Some bug fixes.
+
 ## 0.0.3 - 07.04.2017
 - Bugfix for shorthand onFinishCallback and debug option.
 - test/tests/very_simple.js is now simpler.
