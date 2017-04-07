@@ -2,20 +2,18 @@
  * Overtimer constructor.
  * @param duration {Number} Duration of timer
  * @param opts {Object} Overtimer options
+ * @param onFinish {Function} Shorthand for on('finish')
  * @constructor
  */
-function Overtimer(duration = 1000, opts = {}) {
-  if (typeof duration !== 'number') {
-    this.log('Duration must be number value.', 1000)
-    duration = 1000
-  } else if (duration <= 0) {
-    this.log('Duration must be bigger than 0.', 1001)
-    duration = 1000
-  } else if (typeof opts !== 'object') {
-    this.log('Options must be object.', 1002)
-    opts = {}
+function Overtimer(duration = 1000, opts = {}, onFinish = null) {
+  let finishEvent = null
+  let defaults = {
+    duration: 1000,
+    
+    repeat: 1,
+    debug: true,
+    start: true
   }
-  
   this.eventHandlers = {
     'start': [],
     'tick': [],
@@ -27,18 +25,28 @@ function Overtimer(duration = 1000, opts = {}) {
     'update': []
   }
   
-  let defaults = {
-    duration,
-    
-    repeat: 1,
-    debug: false,
-    start: true
+  if (typeof opts === 'object') {
+    this.options = Object.assign({}, defaults, opts)
+  } else {
+    if (typeof opts === 'function') {
+      finishEvent = opts
+    }
+    this.options = Object.assign({}, defaults)
   }
   
-  this.options = Object.assign({}, defaults, opts)
+  if (typeof onFinish === 'function')
+    finishEvent = onFinish
+  
+  if (typeof duration !== 'number') {
+    this.log('Duration must be number value.', 1000)
+    this.options.duration = 1000
+  } else if (duration <= 0) {
+    this.log('Duration must be bigger than 0.', 1001)
+    this.options.duration = 1000
+  }
   
   // Properties
-  this.version = '0.0.2'
+  this.version = '0.0.3'
   this.globalTimerId = null
   this.state = Overtimer.STATES.CREATED
   
@@ -59,7 +67,10 @@ function Overtimer(duration = 1000, opts = {}) {
   
   this.timesUpdatedAt = -1
   
-  if( this.options.start )
+  if (typeof finishEvent === 'function')
+    this.on('finish', finishEvent)
+  
+  if (this.options.start)
     this.start()
 }
 
@@ -68,8 +79,8 @@ function Overtimer(duration = 1000, opts = {}) {
  * @param msg {String} Message will be displayed
  * @param code {Number} Code will be displayed
  */
-Overtimer.prototype.log = function( msg = 'Unexcepted error.', code = -1 ) {
-  if( this.options.debug )
+Overtimer.prototype.log = function (msg = 'Unexcepted error.', code = -1) {
+  if (this.options.debug)
     console.log(`${code !== -1 ? '( ' + code.toString() + ' ): ' : ''} ${msg}`)
 }
 
@@ -79,17 +90,17 @@ Overtimer.prototype.log = function( msg = 'Unexcepted error.', code = -1 ) {
  * @param callback {Function} Function to be triggered when the event occurs.
  * @return {Boolean} true if succeeded, false if not.
  */
-Overtimer.prototype.on = function( eventName, callback ) {
-  if( typeof eventName !== 'string' ) {
+Overtimer.prototype.on = function (eventName, callback) {
+  if (typeof eventName !== 'string') {
     this.log('Event name must be string.', 1000)
     return false
-  } else if( eventName.length < 1) {
+  } else if (eventName.length < 1) {
     this.log('Event name length be bigger than 0.', 1001)
     return false
-  } else if( typeof this.eventHandlers[eventName] === 'undefined' ) {
+  } else if (typeof this.eventHandlers[eventName] === 'undefined') {
     this.log('Event name not registered!', 1002)
     return false
-  } else if( typeof callback !== 'function' ) {
+  } else if (typeof callback !== 'function') {
     this.log('Callback is not function!', 1003)
     return false
   }
@@ -104,20 +115,20 @@ Overtimer.prototype.on = function( eventName, callback ) {
  * @param func {Function} Function to be removed.
  * @return {boolean} true if succeeded, false if not.
  */
-Overtimer.prototype.off = function( eventName, func = null ) {
-  if( typeof eventName !== 'string' ) {
+Overtimer.prototype.off = function (eventName, func = null) {
+  if (typeof eventName !== 'string') {
     this.log('Event name must be string.', 1004)
     return false
-  } else if( eventName.length < 1) {
+  } else if (eventName.length < 1) {
     this.log('Event name length be bigger than 0.', 1005)
     return false
-  } else if( typeof this.eventHandlers[eventName] === 'undefined' ) {
+  } else if (typeof this.eventHandlers[eventName] === 'undefined') {
     this.log('Event name not registered!', 1006)
     return false
   }
   
-  if( typeof func === 'function' )
-    this.eventHandlers[eventName] = this.eventHandlers[eventName].filter( f => f !== func )
+  if (typeof func === 'function')
+    this.eventHandlers[eventName] = this.eventHandlers[eventName].filter(f => f !== func)
   else
     this.eventHandlers[eventName] = []
   
@@ -129,23 +140,22 @@ Overtimer.prototype.off = function( eventName, func = null ) {
  * @param eventName {string} Event name you want to trigger
  * @param payload {object} payload for trigger. can be array, or can be object
  * @return {boolean} Returns true if succeeded, false if not
- * @private
  */
-Overtimer.prototype.trigger = function(eventName, payload=[]) {
+Overtimer.prototype.trigger = function (eventName, payload = []) {
   if (typeof eventName !== 'string') {
     this.log('Event name must be string.', 1006)
     return false
   } else if (eventName.length < 1) {
     this.log("Event name's length must bigger than 1.", 1007)
     return false
-  } else if( typeof this.eventHandlers[eventName.toLowerCase()] === 'undefined' || !Array.isArray(this.eventHandlers[eventName.toLowerCase()]) ) {
+  } else if (typeof this.eventHandlers[eventName.toLowerCase()] === 'undefined' || !Array.isArray(this.eventHandlers[eventName.toLowerCase()])) {
     this.log('Event not found in list.', 1008)
     return false
   }
   
-  if( typeof payload !== 'undefined' && !Array.isArray(payload) ) {
+  if (typeof payload !== 'undefined' && !Array.isArray(payload)) {
     payload = [payload]
-  } else if( typeof payload === 'undefined' ) {
+  } else if (typeof payload === 'undefined') {
     this.log('Payload comes undefined.', 1009)
     payload = []
   }
@@ -159,26 +169,24 @@ Overtimer.prototype.trigger = function(eventName, payload=[]) {
 
 /**
  * Joins main interval for updates.
- * @private
  */
-Overtimer.prototype.joinToMainInterval = function() {
+Overtimer.prototype.joinToMainInterval = function () {
   this.globalTimerId = Overtimer.global.join(this.tickMainInterval.bind(this))
 }
 
 /**
  * All time updates happens in this function.
- * @private
  */
-Overtimer.prototype.tickMainInterval = function() {
+Overtimer.prototype.tickMainInterval = function () {
   let now = Date.now(),
     diff = now - this.timesUpdatedAt
   
-  if( this.state === Overtimer.STATES.RUNNING ) {
+  if (this.state === Overtimer.STATES.RUNNING) {
     this.elapsedTime += diff
     this.remainingTime -= diff
     this.totalElapsedTime += diff
     this.totalRemainingTime -= diff
-  } else if( this.state === Overtimer.STATES.PAUSED ) {
+  } else if (this.state === Overtimer.STATES.PAUSED) {
     this.pausedTime += diff
   }
   
@@ -186,15 +194,14 @@ Overtimer.prototype.tickMainInterval = function() {
   
   this.trigger('update')
   
-  if( this.remainingTime < 1 )
+  if (this.remainingTime < 1)
     this.tick()
 }
 
 /**
  * Leaves from main interval
- * @private
  */
-Overtimer.prototype.leaveFromMainInterval = function() {
+Overtimer.prototype.leaveFromMainInterval = function () {
   Overtimer.global.leave(this.globalTimerId)
   this.globalTimerId = null
 }
@@ -204,7 +211,7 @@ Overtimer.prototype.leaveFromMainInterval = function() {
  * @return {boolean} true if succeeded, false if not
  */
 Overtimer.prototype.start = function () {
-  if( this.state === Overtimer.STATES.RUNNING ) {
+  if (this.state === Overtimer.STATES.RUNNING) {
     this.log('Timer is already started.', 1010)
     return false
   }
@@ -216,9 +223,9 @@ Overtimer.prototype.start = function () {
   this.remainingTime = this.options.duration
   this.totalRemainingTime = this.options.duration * this.options.repeat
   this.currentRepeat = 1
-
+  
   this.timesUpdatedAt = Date.now()
-
+  
   this.joinToMainInterval()
   this.trigger('start')
   return true
@@ -228,8 +235,8 @@ Overtimer.prototype.start = function () {
  * Pauses the timer
  * @return {boolean} true if succeeded, false if not
  */
-Overtimer.prototype.pause = function() {
-  if( this.state !== Overtimer.STATES.RUNNING ) {
+Overtimer.prototype.pause = function () {
+  if (this.state !== Overtimer.STATES.RUNNING) {
     this.log("Can't pause when timer not running.", 1020)
     return false
   }
@@ -244,8 +251,8 @@ Overtimer.prototype.pause = function() {
  * Resumes the paused timer
  * @return {boolean} true if succeeded, false if not
  */
-Overtimer.prototype.resume = function() {
-  if( this.state !== Overtimer.STATES.PAUSED ) {
+Overtimer.prototype.resume = function () {
+  if (this.state !== Overtimer.STATES.PAUSED) {
     this.log("Can't resume when timer not paused.", 1021)
     return false
   }
@@ -259,8 +266,8 @@ Overtimer.prototype.resume = function() {
  * Repeats the loop
  * @return {boolean} Returns true if succeeded, false if not
  */
-Overtimer.prototype.repeat = function() {
-  if( this.state !== Overtimer.STATES.RUNNING ) {
+Overtimer.prototype.repeat = function () {
+  if (this.state !== Overtimer.STATES.RUNNING) {
     this.log("Can't repeat when timer not running.", 1012)
     return false
   }
@@ -279,11 +286,11 @@ Overtimer.prototype.repeat = function() {
 /**
  * Works when timer tick time comes.
  */
-Overtimer.prototype.tick = function() {
+Overtimer.prototype.tick = function () {
   this.tickedAt = Date.now()
   this.trigger('tick')
   
-  if( this.currentRepeat < this.options.repeat )
+  if (this.currentRepeat < this.options.repeat)
     this.repeat()
   else {
     this.trigger('finish')
@@ -296,7 +303,7 @@ Overtimer.prototype.tick = function() {
  * @return {boolean} Returns true if succeeded, false if not
  */
 Overtimer.prototype.stop = function () {
-  if( this.state === Overtimer.STATES.STOPPED ) {
+  if (this.state === Overtimer.STATES.STOPPED) {
     this.log('Timer is already stopped.', 1011)
     return false
   }
@@ -335,17 +342,17 @@ Overtimer.global = {
    * @param callback {function} Callback function will trigger ~ every ms
    * @return {Number} Unique timer id for leave.
    */
-  join( callback ) {
-    let found = Overtimer.global.callbacks.find( f => f.callback === callback )
+  join(callback) {
+    let found = Overtimer.global.callbacks.find(f => f.callback === callback)
     
-    if( typeof found === 'undefined' ) {
+    if (typeof found === 'undefined') {
       Overtimer.global.lastId += 1
       Overtimer.global.callbacks.push({callback, id: Overtimer.global.lastId})
     } else {
       return found.id
     }
     
-    if( Overtimer.global.timer === null )
+    if (Overtimer.global.timer === null)
       Overtimer.global.timer = setInterval(Overtimer.global.tick, Overtimer.global.updateMs)
     
     return Overtimer.global.lastId
@@ -355,10 +362,10 @@ Overtimer.global = {
    * Leaves from global timer list
    * @param id {number} Auto generated id from join for leave.
    */
-  leave( id ) {
+  leave(id) {
     Overtimer.global.callbacks = Overtimer.global.callbacks.filter(c => c.id !== id)
     
-    if( Overtimer.global.callbacks.length === 0 && Overtimer.global.timer !== null ) {
+    if (Overtimer.global.callbacks.length === 0 && Overtimer.global.timer !== null) {
       clearInterval(Overtimer.global.timer)
       Overtimer.global.timer = null
     }

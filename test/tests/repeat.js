@@ -3,19 +3,19 @@ const Overtimer = require('./../../src/overtimer')
 const timer1 = new Overtimer(1000, {debug: true, repeat: 10})
 let updatedFor = 0
 
-timer1.on('start', function() {
+timer1.on('start', function () {
   console.log('Timer1 started!')
 })
 
-timer1.on('tick', function() {
+timer1.on('tick', function () {
   console.log(`Timer1 tick! Updated ${updatedFor} times.`)
 })
 
-timer1.on('stop', function() {
+timer1.on('stop', function () {
   console.log(`Timer1 stopped! Updated ${updatedFor} before stop.`)
 })
 
-timer1.on('repeat', function() {
+timer1.on('repeat', function () {
   console.log(`Repeated at ${updatedFor}!`)
 })
 

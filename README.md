@@ -18,7 +18,7 @@ Please check `test/tests` folder for examples.
     repeat: 1,
     debug: false,
     start: true
-  })
+  }, onFinishCallback = null)
   
   myTimer.on('start', function() { /* ... */ })
   myTimer.on('tick', function() { /* ... */ })
