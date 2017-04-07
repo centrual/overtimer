@@ -1,9 +1,21 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "overtimer",
   "description": "Mission critical updateable javascript timer. It can handle overtimes also limits.",
   "main": "dist/overtimer.min.js",
   "license": "MIT",
+  "keywords": [
+    "ecosystem:javascript",
+    "javascript",
+    "timer",
+    "settimeout",
+    "setinterval",
+    "timespan",
+    "timestamp",
+    "time",
+    "moment",
+    "repeater"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/centrual/overtimer.git"

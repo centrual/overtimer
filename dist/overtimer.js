@@ -135,7 +135,7 @@ function Overtimer() {
   }
 
   // Properties
-  this.version = '0.1.1';
+  this.version = '0.1.2';
   this.globalTimerId = null;
   this.state = Overtimer.STATES.CREATED;
 
@@ -506,6 +506,6 @@ Overtimer.prototype.stop = function () {
   return true;
 };
 
-module.exports = Overtimer;
+if (typeof module !== 'undefined') module.exports = Overtimer;
 
 //# sourceMappingURL=overtimer.js.map
