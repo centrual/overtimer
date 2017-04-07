@@ -1,9 +1,14 @@
 ## Next version targets
-- Dynamically add, remove duration to timer.
-- Reset and destroy methods.
+- Add Dynamically add-remove duration to timer.
+- Add Reset and destroy methods.
 - Add unit tests.
 - Add code coverage.
 - Better documentation.
+- Website
+
+## 0.1.2 - 07.04.2017
+- Fixed module check for browser usage.
+- Updated package keywords
 
 ## 0.1.1 - 07.04.2017
 - Overtime feature added.
