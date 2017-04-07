@@ -20,16 +20,8 @@ Please check `test/tests` folder for examples.
     start: true
   }, onFinishCallback = null)
   
-  myTimer.on('start', function() { /* ... */ })
-  myTimer.on('tick', function() { /* ... */ })
-  myTimer.on('pause', function() { /* ... */ })
-  myTimer.on('resume', function() { /* ... */ })
-  myTimer.on('finish', function() { /* ... */ })
-  myTimer.on('stop', function() { /* ... */ })
-  myTimer.on('repeat', function() { /* ... */ })
-  myTimer.on('update', function() { /* ... */ })
-  
-  // Event name can be start, tick, pause, resume, finish, stop, repeat and update
+  // Event name can be: start, tick, pause, resume, finish, stop, repeat, update
+  myTimer.on('Event name', function() { /* ... */ })
   myTimer.off('Event name', handlerFunction = null)
   
   // Public methods
