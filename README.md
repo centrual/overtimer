@@ -10,9 +10,12 @@ Javascript timer with extended features. Control is yours now!
 
 #### Install
 
-You can install from npm or you can download direct source for direct browser use without webpack etc.
+You can download files as zip or you can use
+
 ``` bash
-npm i overtimer --save
+npm install overtimer --save
+bower install overtimer --save
+yarn add overtimer
 ```
 
 Please check `test/tests` folder for examples.
