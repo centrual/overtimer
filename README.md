@@ -1,12 +1,10 @@
-<center>
-<img src="https://github.com/centrual/overtimer/raw/master/docs/assets/img/logo.png" alt="overtimer logo">
-</center>
+---
+
+![Overtimer logo](docs/assets/img/logo.png "overtimer logo")
 
 ---
 
-<center>
 Javascript timer with extended features. Control is yours now!
-</center>
 
 #### Install
 
