@@ -1,0 +1,36 @@
+{
+	"name": "overtimer",
+	"description": "Mission critical updateable javascript timer. It can handle overtimes also limits.",
+	"main": "dist/overtimer.js",
+	"moduleType": [
+		"globals",
+		"node"
+	],
+	"authors": [
+		{ "name": "Oğuz Özcan", "email": "centrual@outlook.com", "homepage": "https://github.com/centrual/" }
+	],
+	"license": "MIT",
+	"keywords": [
+		"ecosystem:javascript",
+		"javascript",
+		"js",
+		"timer",
+		"settimeout",
+		"setinterval",
+		"timespan",
+		"timestamp",
+		"time",
+		"moment",
+		"repeater",
+		"delay"
+	],
+	"homepage": "https://github.com/centrual/overtimer",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests",
+		"docs"
+	]
+}
