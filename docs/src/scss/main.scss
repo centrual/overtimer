@@ -6,14 +6,14 @@ header {
 	padding: 10px 0 15px;
 	background: #EEE;
 	border-bottom: 1px solid #E9E9E9;
-	position: sticky;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
 }
 
-.sub-header {
-	display: none;
-	background: #F1F1F1;
-	border-bottom: 1px solid #EEE;
-	padding: 12px 0 10px;
+main {
+	padding-bottom: 75px;
 }
 
 h2 {
@@ -32,13 +32,10 @@ footer {
 	border-top: 1px solid #E9E9E9;
 	
 	padding: 11px 0 10px;
-	position: absolute;
+	position: fixed;
 	left: 0;
-	top: 100%;
 	right: 0;
 	bottom: 0;
-	
-	margin-top: -45px;
 }
 
 .text-left { text-align: left; }
