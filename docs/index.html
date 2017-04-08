@@ -1,118 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Overtimer</title>
-	
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css" integrity="sha256-5+W3JHnvGYIJkVxUBsw+jBi9+pOlu9enPX3vZapXj5M=" crossorigin="anonymous" />
-	<link rel="stylesheet" href="assets/css/main.css">
-	
+  <meta charset="UTF-8">
+  <title>Overtimer</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css"
+        integrity="sha256-5+W3JHnvGYIJkVxUBsw+jBi9+pOlu9enPX3vZapXj5M=" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="assets/css/main.css">
+
 </head>
 <body>
 
-	<header>
-		
-		<div class="ui container">
-			
-			<div class="ui stackable middle aligned grid">
-				
-				<div class="row">
-					
-					<div class="seven wide left aligned column text-center-xs text-center-sm">
-						<img src="assets/img/logo.png">
-					</div>
-					
-					<div class="nine wide right aligned column text-center-xs text-center-sm">
-						
-						<div class="ui left labeled button hide-xxs" tabindex="0">
-							
-							<a class="ui basic right pointing label">
-								
-								<div id="package-manager-selection" class="ui inline dropdown">
-									<div class="text">npm</div>
-									<i class="dropdown icon"></i>
-									<div class="menu">
-										<div class="header">Package Manager</div>
-										<div class="active item" data-text="npm">npm</div>
-										<div class="item" data-text="yarn">yarn</div>
-										<div class="item" data-text="bower">bower</div>
-									</div>
-								</div>
-								
-								<span class="command">install</span>&nbsp;<strong>overtimer</strong>
-								
-							</a>
-							<div id="clipboard" class="ui icon purple button" data-clipboard-text="npm install overtimer">
-								<i class="clipboard icon"></i>
-							</div>
-						</div>
-						
-						<a href="https://github.com/centrual/overtimer/zipball/master/" class="ui purple button">
-							<i class="file archive outline icon"></i>
-							Download as Zip
-						</a>
-						
-					</div>
-					
-				</div>
-				
-			</div>
-			
-		</div>
-		
-	</header>
-	
-	<!--
-	<div class="sub-header">
-		
-		<div class="ui container center aligned">
-			
-			<img src="https://img.shields.io/github/release/centrual/overtimer.svg" alt="Overtimer Github Release Version">
-			
-			<a href="https://github.com/centrual/overtimer/stargazers">
-				<img src="https://img.shields.io/github/stars/centrual/overtimer.svg" alt="Overtimer Stars">
-			</a>
-			
-			<a href="https://github.com/centrual/overtimer/network">
-				<img src="https://img.shields.io/github/forks/centrual/overtimer.svg" alt="Overtimer Forks">
-			</a>
-			
-			<a href="https://raw.githubusercontent.com/centrual/overtimer/master/LICENSE">
-				<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Overtimer License">
-			</a>
-			
-			<a href="https://github.com/centrual/overtimer/issues">
-				<img src="https://img.shields.io/github/issues/centrual/overtimer.svg" alt="Overtimer Issues">
-			</a>
-			
-			<img src="https://img.shields.io/npm/dt/overtimer.svg" alt="Overtimer Total Downloads">
-			<img src="https://img.shields.io/npm/v/overtimer.svg" alt="Overtimer npm version">
-			<img src="https://img.shields.io/bower/v/overtimer.svg" alt="Overtimer bower version">
-			
-		</div>
-		
-	</div>
-	-->
-	
-	<main>
-		
-		<div class="ui center aligned container">
-		
-			<h2>Javascript timer with extended features.<br>Control is yours now!</h2>
-			
-			<p>
-				The documentation will be published soon.
-			</p>
-			
-		</div>
-		
-	</main>
-	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.0/clipboard.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js" integrity="sha256-97Q90i72uoJfYtVnO2lQcLjbjBySZjLHx50DYhCBuJo=" crossorigin="anonymous"></script>
-	<!-- <script src="../src/overtimer.js"></script> -->
-	<script src="https://cdn.rawgit.com/centrual/overtimer/master/dist/overtimer.min.js"></script>
-	<script src="assets/js/custom.js"></script>
+<header>
+  
+  <div class="ui container">
+    
+    <div class="ui stackable middle aligned grid">
+      
+      <div class="row">
+        
+        <div class="seven wide left aligned column text-center-xs text-center-sm">
+          <img src="assets/img/logo.png">
+        </div>
+        
+        <div class="nine wide right aligned column text-center-xs text-center-sm">
+          
+          <div class="ui left labeled button hide-xxs" tabindex="0">
+            
+            <a class="ui basic right pointing label">
+              
+              <div id="package-manager-selection" class="ui inline dropdown">
+                <div class="text">npm</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                  <div class="header">Package Manager</div>
+                  <div class="active item" data-text="npm">npm</div>
+                  <div class="item" data-text="yarn">yarn</div>
+                  <div class="item" data-text="bower">bower</div>
+                </div>
+              </div>
+              
+              <span class="command">install</span>&nbsp;<strong>overtimer</strong>
+            
+            </a>
+            <div id="clipboard" class="ui icon purple button" data-clipboard-text="npm install overtimer">
+              <i class="clipboard icon"></i>
+            </div>
+          </div>
+          
+          <a href="https://github.com/centrual/overtimer/zipball/master/" class="ui purple button">
+            <i class="file archive outline icon"></i>
+            Download as Zip
+          </a>
+        
+        </div>
+      
+      </div>
+    
+    </div>
+  
+  </div>
+
+</header>
+
+<main>
+  
+  <div class="ui center aligned container">
+    
+    <h2>Javascript timer with extended features.<br>Control is yours now!</h2>
+    
+    <p>
+      The documentation will be published soon.
+    </p>
+  
+  </div>
+
+</main>
+
+<footer>
+  
+  <div class="ui container center aligned">
+    
+    <img src="https://img.shields.io/github/release/centrual/overtimer.svg" alt="Overtimer Github Release Version">
+    
+    <a href="https://github.com/centrual/overtimer/stargazers">
+      <img src="https://img.shields.io/github/stars/centrual/overtimer.svg" alt="Overtimer Stars">
+    </a>
+    
+    <a href="https://github.com/centrual/overtimer/network">
+      <img src="https://img.shields.io/github/forks/centrual/overtimer.svg" alt="Overtimer Forks">
+    </a>
+    
+    <a href="https://raw.githubusercontent.com/centrual/overtimer/master/LICENSE">
+      <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Overtimer License">
+    </a>
+    
+    <a href="https://github.com/centrual/overtimer/issues">
+      <img src="https://img.shields.io/github/issues/centrual/overtimer.svg" alt="Overtimer Issues">
+    </a>
+    
+    <img src="https://img.shields.io/npm/dt/overtimer.svg" alt="Overtimer Total Downloads">
+    <img src="https://img.shields.io/npm/v/overtimer.svg" alt="Overtimer npm version">
+    <img src="https://img.shields.io/bower/v/overtimer.svg" alt="Overtimer bower version">
+  
+  </div>
+
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.0/clipboard.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"
+        integrity="sha256-97Q90i72uoJfYtVnO2lQcLjbjBySZjLHx50DYhCBuJo=" crossorigin="anonymous"></script>
+<!-- <script src="../src/overtimer.js"></script> -->
+<script src="https://cdn.rawgit.com/centrual/overtimer/master/dist/overtimer.min.js"></script>
+<script src="assets/js/custom.js"></script>
 </body>
 </html>
