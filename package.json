@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3",
   "name": "overtimer",
   "description": "Mission critical updateable javascript timer. It can handle overtimes also limits.",
   "main": "dist/overtimer.min.js",
@@ -7,6 +7,7 @@
   "keywords": [
     "ecosystem:javascript",
     "javascript",
+    "js",
     "timer",
     "settimeout",
     "setinterval",
@@ -14,13 +15,22 @@
     "timestamp",
     "time",
     "moment",
-    "repeater"
+    "repeater",
+    "delay"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/centrual/overtimer.git"
   },
-  "bugs": "https://github.com/centrual/overtimer/issues",
+  "author": {
+    "name": "Oğuz Özcan",
+    "email": "centrual@outlook.com",
+    "url": "https://github.com/centrual/"
+  },
+  "bugs": {
+    "url": "https://github.com/centrual/overtimer/issues",
+    "email" : "centrual@outlook.com"
+  },
   "scripts": {
     "test": "node test/index.js",
     "build": "node_modules/.bin/babel src/overtimer.js -o dist/overtimer.js --source-maps && npm run uglify",

@@ -6,6 +6,10 @@
 - Better documentation.
 - Website
 
+## 0.1.3 - 08.04.2017
+- Added Overtimer now reachable from window (window.Overtimer).
+- Added bower and yarn related files.
+
 ## 0.1.2 - 07.04.2017
 - Fixed module check for browser usage.
 - Updated package keywords

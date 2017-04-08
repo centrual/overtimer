@@ -123,7 +123,7 @@ function Overtimer(duration = 1000, opts = {}, onFinish = null) {
   }
   
   // Properties
-  this.version = '0.1.2'
+  this.version = '0.1.3'
   this.globalTimerId = null
   this.state = Overtimer.STATES.CREATED
   
@@ -500,3 +500,6 @@ Overtimer.prototype.stop = function () {
 
 if (typeof module !== 'undefined')
   module.exports = Overtimer
+
+if (typeof window !== 'undefined')
+  window.Overtimer = Overtimer
