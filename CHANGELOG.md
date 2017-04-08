@@ -4,7 +4,11 @@
 - Add unit tests.
 - Add code coverage.
 - Better documentation.
-- Website
+
+## 0.1.4 - 08.04.2017
+- Fixed debug option now false as default.
+- Changed overtime limit and bump options now same as duration as default.
+- Website launched. Documentation on way...
 
 ## 0.1.3 - 08.04.2017
 - Added Overtimer now reachable from window (window.Overtimer).

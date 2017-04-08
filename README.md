@@ -1,5 +1,12 @@
-# Overtimer
-Performant javascript timer with extended features.
+<center>
+<img src="https://github.com/centrual/overtimer/raw/master/docs/assets/img/logo.png" alt="overtimer logo">
+</center>
+
+---
+
+<center>
+Javascript timer with extended features. Control is yours now!
+</center>
 
 #### Install
 

@@ -86,16 +86,15 @@ function Overtimer() {
 
   var finishEvent = null;
   var defaults = {
-    duration: 1000,
+    duration: duration,
+    overtimeLimit: duration,
+    overtimeBump: duration,
 
-    poll: 50,
+    poll: 100,
     delay: 0,
     repeat: 1,
-    debug: true,
-    start: true,
-
-    overtimeLimit: 0,
-    overtimeBump: 0
+    debug: false,
+    start: true
   };
 
   this.eventHandlers = {
@@ -124,18 +123,24 @@ function Overtimer() {
 
   if (typeof onFinish === 'function') finishEvent = onFinish;
 
+  var durationError = false;
+
   if (typeof duration !== 'number') {
     this.log('Duration must be number value.', 1000);
-    this.options.duration = 1000;
+    durationError = true;
   } else if (duration <= 0) {
     this.log('Duration must be bigger than 0.', 1001);
+    durationError = true;
+  }
+
+  if (durationError) {
     this.options.duration = 1000;
-  } else {
-    this.options.duration = duration;
+    this.options.overtimeLimit = 1000;
+    this.options.overtimeBump = 1000;
   }
 
   // Properties
-  this.version = '0.1.3';
+  this.version = '0.1.4';
   this.globalTimerId = null;
   this.state = Overtimer.STATES.CREATED;
 
