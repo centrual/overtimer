@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" sizes="144x144" href="assets/img/icons/apple-icon-144x144.png">
   <link rel="apple-touch-icon" sizes="152x152" href="assets/img/icons/apple-icon-152x152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="assets/img/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icons/android-icon-192x192.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="assets/img/icons/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/img/icons/favicon-16x16.png">
@@ -26,52 +26,73 @@
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css"
         integrity="sha256-5+W3JHnvGYIJkVxUBsw+jBi9+pOlu9enPX3vZapXj5M=" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/railscasts.min.css">
   <link rel="stylesheet" href="assets/css/main.css">
 
 </head>
 <body>
-
-<header>
-  
-  <div class="ui container">
+<div id="entry">
+  <header class="ui fixed top">
     
-    <div class="ui stackable middle aligned grid">
+    <div class="ui container">
       
-      <div class="row">
+      <div class="ui stackable middle aligned grid">
         
-        <div class="seven wide left aligned column text-center-xs text-center-sm">
-          <img src="assets/img/logo.png">
-        </div>
-        
-        <div class="nine wide right aligned column text-center-xs text-center-sm">
+        <div class="row">
           
-          <div class="ui left labeled button hide-xxs" tabindex="0">
+          <div class="seven wide left aligned column text-center-xs text-center-sm">
+            <img src="assets/img/logo.png">
+          </div>
+          
+          <div class="nine wide right aligned column text-center-xs text-center-sm">
             
-            <a class="ui basic right pointing label">
-              
-              <div id="package-manager-selection" class="ui inline dropdown">
+            <!--
+            <div class="ui small left right labeled action input hide-xxs">
+              <div class="ui dropdown purple label" id="package-manager-selection">
                 <div class="text">npm</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                  <div class="header">Package Manager</div>
-                  <div class="active item" data-text="npm">npm</div>
-                  <div class="item" data-text="yarn">yarn</div>
-                  <div class="item" data-text="bower">bower</div>
+                  <div class="item active">npm</div>
+                  <div class="item">bower</div>
+                  <div class="item">yarn</div>
                 </div>
               </div>
-              
-              <span class="command">install</span>&nbsp;<strong>overtimer</strong>
-            
-            </a>
-            <div id="clipboard" class="ui icon purple button" data-clipboard-text="npm install overtimer">
-              <i class="clipboard icon"></i>
+              <input id="command" type="text" value="npm install overtime" readonly>
+              <button class="ui icon purple button" data-clipboard-target="#command" id="clipboard">
+                <i class="copy icon"></i>
+              </button>
             </div>
-          </div>
+            -->
+            
+            <div class="ui left labeled button hide-xxs" tabindex="0">
+              
+              <a class="ui basic right pointing label">
+                
+                <div id="package-manager-selection" class="ui inline dropdown">
+                  <div class="text">npm</div>
+                  <i class="dropdown icon"></i>
+                  <div class="menu">
+                    <div class="header">Package Manager</div>
+                    <div class="active item" data-text="npm">npm</div>
+                    <div class="item" data-text="yarn">yarn</div>
+                    <div class="item" data-text="bower">bower</div>
+                  </div>
+                </div>
+                
+                <span class="command">install</span>&nbsp;<strong>overtimer</strong>
+              
+              </a>
+              <div id="clipboard" class="ui icon purple button" data-clipboard-text="npm install overtimer">
+                <i class="clipboard icon"></i>
+              </div>
+            </div>
+            
+            <a href="https://github.com/centrual/overtimer/zipball/master/" class="ui purple button">
+              <i class="file archive outline icon"></i>
+              Download as Zip
+            </a>
           
-          <a href="https://github.com/centrual/overtimer/zipball/master/" class="ui purple button">
-            <i class="file archive outline icon"></i>
-            Download as Zip
-          </a>
+          </div>
         
         </div>
       
@@ -79,65 +100,227 @@
     
     </div>
   
-  </div>
-
-</header>
-
-<main>
+  </header>
   
-  <div class="ui center aligned container">
+  <main>
     
-    <h2>Javascript timer with extended features.<br>Control is yours now!</h2>
-    
-    <p>
-      The documentation will be published soon.
-    </p>
-    
-  </div>
+    <div class="ui container">
+      
+      <h2 class="text-center">Javascript timer with extended features.<br>Control is yours now!</h2>
+      
+      <div class="ui grid">
+        
+        <div class="row">
+          
+          <div id="documentation" class="twelve wide column">
+            
+            <h1 class="ui header">Documentation</h1>
+            
+            <p>
+              Welcome to documentation of overtimer. I want to share some informations about documentation before start.
+              Type of the time is <strong>milliseconds in everywhere <span class="ui tiny label">1000 ms</span> = <span
+              class="ui tiny label">1 second</span></strong>. Code fields in the documentation are written in <strong
+              class="ui tiny yellow label">ECMAScript 6 ( es6 )</strong>. If you didn't learned es6 yet, <a
+              href="https://github.com/lukehoban/es6features" rel="nofollow" target="_blank">you can start from here. <i
+              class="external icon"></i></a>. Lastly, you can set <span class="ui tiny label">debug</span> variable to
+              <span class="ui tiny label">true</span> for display warning messages in developer console. <span
+              class="ui tiny label">( F12 )</span>
+            </p>
+            
+            <a name="simple"></a>
+            
+            <h4 class="ui header">Simple Usage</h4>
+            
+            <pre><code class="javascript">  new Overtimer(1000, () => {
+    $('#example1-success-box').transition('fade')
+  })</code></pre>
+            
+            <div id="example1-success-box" class="ui positive message hidden">
+              <i class="close icon"></i>
+              Success! 1 second passed!
+            </div>
+            
+            <button id="example1-button" class="ui right labeled icon secondary button">
+              <i class="angle right icon"></i>
+              Test it!
+            </button>
+  
+  
+            <div class="ui section divider"></div>
+            
+            
+            <a name="repeat"></a>
+            
+            <h4 class="ui header">Repeat</h4>
+            
+            <pre><code class="javascript">  let example2Timer = new Overtimer(4000, {repeat: 3, start: false})
+  example2Timer.on('poll', () => {
+    $('#example2-current-repeat').text(example2Timer.currentRepeat)
+    $('#example2-current-repeat-elapsed').text(`${example2Timer.elapsedTime} ms`)
+    $('#example2-total-elapsed').text(`${example2Timer.totalElapsedTime} ms`)
+    $('#example2-current-repeat-remaining-time').text(`${example2Timer.remainingTime} ms`)
+    $('#example2-total-remaining-time').text(`${example2Timer.totalRemainingTime} ms`)
 
-</main>
+    $('#example2-current-repeat-remaining-time-percentage').progress({ percent: Math.ceil(example2Timer.currentRepeatPercent) })
+    $('#example2-total-remaining-time-percentage').progress({ percent: Math.ceil(example2Timer.totalPercent) })
+  })</code></pre>
+            
+            <div class="ui segment">
+              
+              <div class="ui middle aligned grid">
+                
+                <div class="row">
+                  
+                  <div class="eight wide column">
+                    
+                    <div class="example2-info-labels">
+                      <div class="ui blue label">
+                        Current Repeat:
+                        <div class="detail" id="example2-current-repeat">0</div>
+                      </div>
+                    </div>
+                    
+                    <div class="example2-info-labels">
+                      <div class="ui blue label example2-info-labels">
+                        Current Repeat Elapsed: <span class="detail" id="example2-current-repeat-elapsed">0</span>
+                      </div>
+                    </div>
+                    
+                    <div class="example2-info-labels">
+                      <div class="ui blue label example2-info-labels">
+                        Total Elapsed: <span class="detail" id="example2-total-elapsed">0</span>
+                      </div>
+                    </div>
+                  
+                  </div>
+                  
+                  <div class="eight wide column">
+                    
+                    <div class="example2-progress-block">
+                      <div id="example2-current-repeat-remaining-time-percentage" class="ui progress">
+                        <div class="bar">
+                          <div class="progress"></div>
+                        </div>
+                        <div class="label">Current Repeat Remaining: <span id="example2-current-repeat-remaining-time">0</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="example2-progress-block">
+                      <div id="example2-total-remaining-time-percentage" class="ui progress">
+                        <div class="bar">
+                          <div class="progress"></div>
+                        </div>
+                        <div class="label">Total Remaining Time: <span id="example2-total-remaining-time">0</span>
+                        </div>
+                      </div>
+                    </div>
+                  
+                  </div>
+                
+                </div>
+              
+              </div>
+            
+            </div>
+            
+            <button id="example2-button" class="ui right labeled icon secondary button">
+              <i class="angle right icon"></i>
+              Test it!
+            </button>
+            
+            <button id="example2-pause-button" class="ui labeled icon primary button">
+              <i class="pause icon"></i>
+              Pause
+            </button>
+            
+            <button id="example2-resume-button" class="ui labeled icon positive button">
+              <i class="play icon"></i>
+              Resume
+            </button>
+  
+            <div class="ui section divider"></div>
+          
+            <p>
+              New documentation topics on the way. Stay in touch...
+            </p>
+            
+          </div>
+          
+          <div class="four wide column hidden-xs">
+            
+            <div class="ui rails">
+              
+              <div class="ui sticky">
+                
+                <div class="ui vertical following fluid menu">
+                  <div class="item">
+                    <span class="title"><b>Basic</b></span>
+                    <div class="content menu">
+                      <a class="item" href="#simple">Simple Usage</a>
+                      <a class="item" href="#repeat">Repeat and Percentage</a>
+                    </div>
+                  </div>
+                </div>
+              
+              </div>
+            
+            </div>
+          
+          </div>
+        
+        </div>
+      
+      </div>
+    
+    </div>
+  
+  </main>
+  
+  <footer>
+    
+    <div class="ui container center aligned">
+      
+      <a href="https://github.com/centrual/overtimer">
+        <img src="https://img.shields.io/github/release/centrual/overtimer.svg" alt="Overtimer Github Release Version">
+      </a>
+      
+      <a href="https://github.com/centrual/overtimer/stargazers" target="_blank">
+        <img src="https://img.shields.io/github/stars/centrual/overtimer.svg" alt="Overtimer Stars">
+      </a>
+      
+      <a href="https://github.com/centrual/overtimer/network" target="_blank">
+        <img src="https://img.shields.io/github/forks/centrual/overtimer.svg" alt="Overtimer Forks">
+      </a>
+      
+      <a href="https://raw.githubusercontent.com/centrual/overtimer/master/LICENSE" target="_blank">
+        <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Overtimer License">
+      </a>
+      
+      <a href="https://github.com/centrual/overtimer/issues" target="_blank">
+        <img src="https://img.shields.io/github/issues/centrual/overtimer.svg" alt="Overtimer Issues">
+      </a>
+      
+      <a href="https://www.npmjs.com/package/overtimer" target="_blank">
+        <img src="https://img.shields.io/npm/dt/overtimer.svg" alt="Overtimer Total Downloads">
+      </a>
+      
+      <a href="https://www.npmjs.com/package/overtimer" target="_blank">
+        <img src="https://img.shields.io/npm/v/overtimer.svg" alt="Overtimer npm version">
+      </a>
+    
+    </div>
+  
+  </footer>
 
-<footer>
-  
-  <div class="ui container center aligned">
-  
-    <a href="https://github.com/centrual/overtimer">
-      <img src="https://img.shields.io/github/release/centrual/overtimer.svg" alt="Overtimer Github Release Version">
-    </a>
-    
-    <a href="https://github.com/centrual/overtimer/stargazers" target="_blank">
-      <img src="https://img.shields.io/github/stars/centrual/overtimer.svg" alt="Overtimer Stars">
-    </a>
-    
-    <a href="https://github.com/centrual/overtimer/network" target="_blank">
-      <img src="https://img.shields.io/github/forks/centrual/overtimer.svg" alt="Overtimer Forks">
-    </a>
-    
-    <a href="https://raw.githubusercontent.com/centrual/overtimer/master/LICENSE" target="_blank">
-      <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Overtimer License">
-    </a>
-    
-    <a href="https://github.com/centrual/overtimer/issues" target="_blank">
-      <img src="https://img.shields.io/github/issues/centrual/overtimer.svg" alt="Overtimer Issues">
-    </a>
-    
-    <a href="https://www.npmjs.com/package/overtimer" target="_blank">
-      <img src="https://img.shields.io/npm/dt/overtimer.svg" alt="Overtimer Total Downloads">
-    </a>
-  
-    <a href="https://www.npmjs.com/package/overtimer" target="_blank">
-      <img src="https://img.shields.io/npm/v/overtimer.svg" alt="Overtimer npm version">
-    </a>
-  
-  </div>
-
-</footer>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.0/clipboard.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"
         integrity="sha256-97Q90i72uoJfYtVnO2lQcLjbjBySZjLHx50DYhCBuJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js"></script>
 <!-- <script src="../src/overtimer.js"></script> -->
 <script src="https://cdn.rawgit.com/centrual/overtimer/master/dist/overtimer.min.js"></script>
 <script src="assets/js/custom.js"></script>

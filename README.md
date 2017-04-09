@@ -23,15 +23,15 @@ Please check `test/tests` folder for examples.
   // All time values calculated in milliseconds
   const myTimer = new Overtimer(duration = 10000, {
     // Defaults
-    poll: 50,
+    poll: 100,
     delay: 0,
     repeat: 1,
     debug: false,
     start: true,
     
-    overtimeLimit: 0,
-    overtimeBump: 0
-  }, onFinishCallback = null)
+    overtimeLimit: duration,
+    overtimeBump: duration
+  }, onFinishCallback)
   
   // Event name can be: start, tick, pause, resume, finish, stop, repeat, update, delaystart, delayend, bump, poll
   myTimer.on('Event name', function() { /* ... */ })
@@ -78,6 +78,16 @@ Please check `test/tests` folder for examples.
   myTimer.totalElapsedTime
   myTimer.totalRemainingTime
   myTimer.currentRepeat
+  
+  myTimer.repeatDuration
+  myTimer.repeatDurationWithDelay
+  myTimer.totalDuration
+  myTimer.totalDurationWithDelay
+  
+  myTimer.currentRepeatPercentWithDelay
+  myTimer.currentRepeatPercent
+  myTimer.totalPercentWithDelay
+  myTimer.totalPercent
   
   // Global Objects
   Overtimer.STATES = {

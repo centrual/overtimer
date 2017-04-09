@@ -140,7 +140,7 @@ function Overtimer() {
   }
 
   // Properties
-  this.version = '0.1.4';
+  this.version = '0.1.5';
   this.globalTimerId = null;
   this.state = Overtimer.STATES.CREATED;
 
@@ -165,6 +165,16 @@ function Overtimer() {
   this.totalElapsedTime = -1;
   this.totalRemainingTime = -1;
   this.currentRepeat = -1;
+
+  this.repeatDuration = -1;
+  this.repeatDurationWithDelay = -1;
+  this.totalDuration = -1;
+  this.totalDurationWithDelay = -1;
+
+  this.currentRepeatPercentWithDelay = -1;
+  this.currentRepeatPercent = -1;
+  this.totalPercentWithDelay = -1;
+  this.totalPercent = -1;
 
   this.timesUpdatedAt = -1;
   this.lastPollAt = -1;
@@ -194,16 +204,16 @@ Overtimer.prototype.log = function () {
  */
 Overtimer.prototype.on = function (eventName, callback) {
   if (typeof eventName !== 'string') {
-    this.log('Event name must be string.', 1000);
+    this.log('Event name must be string.', 1002);
     return false;
   } else if (eventName.length < 1) {
-    this.log('Event name length be bigger than 0.', 1001);
+    this.log('Event name length be bigger than 0.', 1003);
     return false;
   } else if (typeof this.eventHandlers[eventName] === 'undefined') {
-    this.log('Event name not registered!', 1002);
+    this.log('Event name not registered!', 1004);
     return false;
   } else if (typeof callback !== 'function') {
-    this.log('Callback is not function!', 1003);
+    this.log('Callback is not function!', 1005);
     return false;
   }
 
@@ -221,13 +231,13 @@ Overtimer.prototype.off = function (eventName) {
   var func = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
   if (typeof eventName !== 'string') {
-    this.log('Event name must be string.', 1004);
+    this.log('Event name must be string.', 1006);
     return false;
   } else if (eventName.length < 1) {
-    this.log('Event name length be bigger than 0.', 1005);
+    this.log('Event name length be bigger than 0.', 1007);
     return false;
   } else if (typeof this.eventHandlers[eventName] === 'undefined') {
-    this.log('Event name not registered!', 1006);
+    this.log('Event name not registered!', 1008);
     return false;
   }
 
@@ -252,13 +262,13 @@ Overtimer.prototype.trigger = function (eventName) {
   }
 
   if (typeof eventName !== 'string') {
-    this.log('Event name must be string.', 1006);
+    this.log('Event name must be string.', 1009);
     return false;
   } else if (eventName.length < 1) {
-    this.log("Event name's length must bigger than 1.", 1007);
+    this.log("Event name's length must bigger than 1.", 1010);
     return false;
   } else if (typeof this.eventHandlers[eventName.toLowerCase()] === 'undefined' || !Array.isArray(this.eventHandlers[eventName.toLowerCase()])) {
-    this.log('Event not found in list.', 1008);
+    this.log('Event not found in list.', 1011);
     return false;
   }
 
@@ -288,11 +298,19 @@ Overtimer.prototype.tickMainInterval = function () {
     this.remainingTime -= diff;
     this.totalElapsedTime += diff;
     this.totalRemainingTime -= diff;
+
+    this.currentRepeatPercentWithDelay = parseFloat((this.elapsedTime + this.delayedTime) / this.repeatDurationWithDelay * 100);
+    this.totalPercentWithDelay = parseFloat((this.totalElapsedTime + this.totalDelayedTime) / this.totalDurationWithDelay * 100);
+    this.currentRepeatPercent = parseFloat(this.elapsedTime / this.repeatDuration * 100);
+    this.totalPercent = parseFloat(this.totalElapsedTime / this.totalDuration * 100);
   } else if (this.state === Overtimer.STATES.PAUSED) {
     this.pausedTime += diff;
   } else if (this.state === Overtimer.STATES.WAITING) {
     this.delayedTime += diff;
     this.totalDelayedTime += diff;
+
+    this.currentRepeatPercentWithDelay = parseFloat((this.elapsedTime + this.delayedTime) / this.repeatDurationWithDelay * 100);
+    this.totalPercentWithDelay = parseFloat((this.totalElapsedTime + this.totalDelayedTime) / this.totalDurationWithDelay * 100);
 
     if (this.delayedTime >= this.options.delay) this.endDelay();
   }
@@ -326,41 +344,49 @@ Overtimer.prototype.bump = function () {
   var customValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;
 
   if (this.state === Overtimer.STATES.STOPPED || this.state === Overtimer.STATES.CREATED) {
-    this.log('Can\'t use overtime bump on stopped or created state.');
+    this.log('Can\'t use overtime bump on stopped or created state.', 1011);
     return false;
   } else if (typeof this.options.overtimeLimit !== 'number' || this.options.overtimeLimit <= 0) {
-    this.log('Can\'t use overtime bump when overtime limit below 0.');
+    this.log('Can\'t use overtime bump when overtime limit below 0.', 1012);
     return false;
   }
 
   var mustBumpFor = typeof customValue === 'number' && customValue > 0 ? customValue : this.options.overtimeBump;
 
   if (typeof mustBumpFor !== 'number' || mustBumpFor <= 0) {
-    this.log('Bump value is not valid! Must be number and bigger than 0 for bump:');
-    this.log(mustBumpFor);
+    this.log('Bump value is not valid! Must be number and bigger than 0 for bump:', 1013);
+    this.log(mustBumpFor, 1014);
     return false;
   }
 
   var maxBump = this.options.overtimeLimit - this.remainingTime;
 
   if (maxBump < 0) {
-    this.log('Timer not reached the overtime limit yet.');
+    this.log('Timer not reached the overtime limit yet.', 1015);
     return false;
   } else if (mustBumpFor < maxBump) {
     this.remainingTime += mustBumpFor;
     this.totalRemainingTime += mustBumpFor;
     this.overTime += mustBumpFor;
 
+    this.repeatDuration += mustBumpFor;
+    this.repeatDurationWithDelay += mustBumpFor;
+    this.totalDuration += mustBumpFor;
+    this.totalDurationWithDelay += mustBumpFor;
+    this.bumpedAt = Date.now();
     this.trigger('bump', mustBumpFor, this.remainingTime);
   } else {
     this.remainingTime += maxBump;
     this.totalRemainingTime += maxBump;
     this.overTime += maxBump;
 
+    this.repeatDuration += maxBump;
+    this.repeatDurationWithDelay += maxBump;
+    this.totalDuration += maxBump;
+    this.totalDurationWithDelay += maxBump;
+    this.bumpedAt = Date.now();
     this.trigger('bump', maxBump, this.remainingTime);
   }
-
-  this.bumpedAt = Date.now();
   return true;
 };
 
@@ -370,24 +396,39 @@ Overtimer.prototype.bump = function () {
  */
 Overtimer.prototype.start = function () {
   if (this.state === Overtimer.STATES.RUNNING || this.state === Overtimer.STATES.WAITING) {
-    this.log('Timer is already started.', 1010);
+    this.log('Timer is already started.', 1016);
     return false;
   }
+
+  var totalDuration = this.options.duration * this.options.repeat;
 
   if (this.options.delay > 0) {
     this.state = Overtimer.STATES.WAITING;
     this.delayedTime = 0;
     this.totalDelayedTime = 0;
     this.delayStartedAt = Date.now();
-  } else this.state = Overtimer.STATES.RUNNING;
+    this.totalDurationWithDelay = totalDuration + this.options.repeat * this.options.delay;
+    this.repeatDurationWithDelay = this.options.duration + this.options.delay;
+  } else {
+    this.state = Overtimer.STATES.RUNNING;
+    this.totalDurationWithDelay = totalDuration;
+    this.repeatDurationWithDelay = this.options.duration;
+  }
 
   this.startedAt = Date.now();
   this.elapsedTime = 0;
   this.totalElapsedTime = 0;
   this.overTime = 0;
   this.remainingTime = this.options.duration;
-  this.totalRemainingTime = this.options.duration * this.options.repeat;
+  this.repeatDuration = this.options.duration;
+  this.totalRemainingTime = totalDuration;
+  this.totalDuration = totalDuration;
   this.currentRepeat = 1;
+
+  this.currentRepeatPercentWithDelay = 0;
+  this.currentRepeatPercent = 0;
+  this.totalPercentWithDelay = 0;
+  this.totalPercent = 0;
 
   this.timesUpdatedAt = Date.now();
   this.lastPollAt = Date.now();
@@ -406,7 +447,7 @@ Overtimer.prototype.start = function () {
  */
 Overtimer.prototype.pause = function () {
   if (this.state !== Overtimer.STATES.RUNNING && this.state !== Overtimer.STATES.WAITING) {
-    this.log("Can't pause when timer not running.", 1020);
+    this.log("Can't pause when timer not running.", 1017);
     return false;
   }
 
@@ -422,12 +463,24 @@ Overtimer.prototype.pause = function () {
  */
 Overtimer.prototype.endDelay = function () {
   if (this.state !== Overtimer.STATES.WAITING) {
-    this.log("Can't end delay when timer not waiting.", 1023);
+    this.log("Can't end delay when timer not waiting.", 1018);
+    return false;
+  } else if (typeof this.options.delay !== 'number' || this.options.delay <= 0) {
+    this.log("Can't end delay when delay option not number or delay below 0.", 1019);
     return false;
   }
+  var remainingDelay = this.options.delay - this.delayedTime;
 
   this.delayEndedAt = Date.now();
   this.state = Overtimer.STATES.RUNNING;
+
+  if (remainingDelay > 0) {
+    this.totalDuration -= remainingDelay;
+    this.totalDurationWithDelay -= remainingDelay;
+    this.repeatDuration -= remainingDelay;
+    this.repeatDurationWithDelay -= remainingDelay;
+  }
+
   this.trigger('delayend');
   return true;
 };
@@ -438,7 +491,7 @@ Overtimer.prototype.endDelay = function () {
  */
 Overtimer.prototype.resume = function () {
   if (this.state !== Overtimer.STATES.PAUSED) {
-    this.log("Can't resume when timer not paused.", 1021);
+    this.log("Can't resume when timer not paused.", 1020);
     return false;
   }
   if (this.options.delay > 0 && this.delayedTime < this.options.delay) this.state = Overtimer.STATES.WAITING;else this.state = Overtimer.STATES.RUNNING;
@@ -453,15 +506,20 @@ Overtimer.prototype.resume = function () {
  */
 Overtimer.prototype.repeat = function () {
   if (this.state !== Overtimer.STATES.RUNNING && this.state !== Overtimer.STATES.WAITING) {
-    this.log("Can't repeat when timer not running.", 1012);
+    this.log("Can't repeat when timer not running.", 1021);
     return false;
   }
+
+  this.totalDuration -= this.remainingTime;
+  this.totalDurationWithDelay -= this.remainingTime;
 
   this.currentRepeat += 1;
   this.elapsedTime = 0;
   this.remainingTime = this.options.duration;
   this.repeatedAt = Date.now();
   this.totalRemainingTime = this.options.repeat * this.options.duration - (this.currentRepeat - 1) * this.options.duration;
+  this.currentRepeatPercentWithDelay = 0;
+  this.currentRepeatPercent = 0;
 
   if (this.options.delay > 0) {
     this.delayedTime = 0;
@@ -488,6 +546,13 @@ Overtimer.prototype.tick = function () {
     this.remainingTime = 0;
     this.stoppedAt = Date.now();
 
+    this.totalPercentWithDelay = 100;
+    this.totalPercent = 100;
+    this.currentRepeatPercent = 100;
+    this.currentRepeatPercentWithDelay = 100;
+
+    this.trigger('update');
+    this.trigger('poll');
     this.trigger('finish');
     this.stop();
   }
@@ -499,7 +564,7 @@ Overtimer.prototype.tick = function () {
  */
 Overtimer.prototype.stop = function () {
   if (this.state === Overtimer.STATES.STOPPED) {
-    this.log('Timer is already stopped.', 1011);
+    this.log('Timer is already stopped.', 1022);
     return false;
   }
   this.leaveFromMainInterval();

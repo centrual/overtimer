@@ -5,6 +5,15 @@
 - Add code coverage.
 - Better documentation.
 
+## 0.1.5 - 09.04.2017
+- Updated First two documentation topics written.
+- Added total and repeat percentages with or without delay.
+- Added total and repeat durations with or without delay.
+- Added percentages test into the test/tests.
+- Fixed repeat, endDelay methods now updating the total duration times.
+- Fixed update and poll triggering before finish one more time for last UI updates.
+- Small bugfixes
+
 ## 0.1.4 - 08.04.2017
 - Fixed debug option now false as default.
 - Changed overtime limit and bump options now same as duration as default.

@@ -1,15 +1,16 @@
-html {
+body, #entry {
 	background: #F8F8F8;
 }
 
 header {
 	padding: 10px 0 15px;
-	background: #EEE;
+	background: #FFF;
 	border-bottom: 1px solid #E9E9E9;
 	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
+	z-index: 10000;
 }
 
 main {
@@ -18,7 +19,7 @@ main {
 
 h2 {
 	font-weight: 400;
-	padding: 100px 0;
+	padding: 20px 0;
 	font-size: 36px;
 	line-height: 50px;
 }
@@ -28,7 +29,7 @@ p {
 }
 
 footer {
-	background: #EEE;
+	background: #FFF;
 	border-top: 1px solid #E9E9E9;
 	
 	padding: 11px 0 10px;
@@ -36,13 +37,27 @@ footer {
 	left: 0;
 	right: 0;
 	bottom: 0;
+	z-index: 10000;
 }
 
 .text-left { text-align: left; }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
+.hide { display: none; }
 
-@media (max-width: 420px) {
+#example2-pause-button, #example2-resume-button {
+	display: none;
+}
+
+.example2-info-labels {
+	margin: 8px 0;
+}
+
+.example2-progress-block {
+	margin: 16px 0 36px;
+}
+
+@media (max-width: 480px) {
 	.text-left-xxs { text-align: left !important; }
 	.text-center-xxs { text-align: center !important; }
 	.text-right-xxs { text-align: right !important; }
@@ -58,6 +73,10 @@ footer {
 	.text-center-xs { text-align: center !important; }
 	.text-right-xs { text-align: right !important; }
 	.hide-xs { display: none !important; }
+	
+	main {
+		padding: 150px 0 125px;
+	}
 }
 
 @media (min-width:769px) and (max-width:991px) {
