@@ -34,7 +34,8 @@
   "scripts": {
     "test": "node test/index.js",
     "build": "node_modules/.bin/babel src/overtimer.js -o dist/overtimer.js --source-maps && npm run uglify",
-    "uglify": "node_modules/.bin/uglifyjs dist/overtimer.js -c -m --keep-fnames -o dist/overtimer.min.js"
+    "uglify": "node_modules/.bin/uglifyjs dist/overtimer.js -c -m --keep-fnames -o dist/overtimer.min.js && npm run buildDocs",
+    "buildDocs": "node_modules/.bin/babel src/overtimer.js -o docs/assets/js/overtimer.js --source-maps"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
