@@ -151,7 +151,7 @@
             
             <a name="repeat"></a>
             
-            <h3 class="ui header">Repeat and Percentage</h3>
+            <h3 class="ui header">Repeat, Percentage, Pause and Resume</h3>
             
             <pre><code class="javascript">  let example2Timer = new Overtimer(4000, {repeat: 3, start: false})
   example2Timer.on('poll', () => {
@@ -189,6 +189,12 @@
                     <div class="example2-info-labels">
                       <div class="ui blue label example2-info-labels">
                         Total Elapsed: <span class="detail" id="example2-total-elapsed">0</span>
+                      </div>
+                    </div>
+  
+                    <div class="example2-info-labels">
+                      <div class="ui blue label example2-info-labels">
+                        Total Paused: <span class="detail" id="example2-total-paused">0</span>
                       </div>
                     </div>
                   
@@ -258,7 +264,7 @@
                     <span class="title"><b>Basic</b></span>
                     <div class="content menu">
                       <a class="item" href="#simple">Simple Usage</a>
-                      <a class="item" href="#repeat">Repeat and Percentage</a>
+                      <a class="item" href="#repeat">Repeat, Percentage, Pause and Resume</a>
                     </div>
                   </div>
                 </div>

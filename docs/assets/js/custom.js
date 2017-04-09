@@ -67,6 +67,7 @@ $(function () {
         $('#example2-total-elapsed').text(example2Timer.totalElapsedTime + ' ms');
         $('#example2-current-repeat-remaining-time').text(example2Timer.remainingTime + ' ms');
         $('#example2-total-remaining-time').text(example2Timer.totalRemainingTime + ' ms');
+        $('#example2-total-paused').text(example2Timer.pausedTime + ' ms');
 
         $('#example2-current-repeat-remaining-time-percentage').progress({ percent: Math.ceil(example2Timer.currentRepeatPercent) });
         $('#example2-total-remaining-time-percentage').progress({ percent: Math.ceil(example2Timer.totalPercent) });
