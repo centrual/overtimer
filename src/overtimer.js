@@ -128,7 +128,7 @@ function Overtimer(duration = 1000, opts = {}, onFinish = null) {
   }
   
   // Properties
-  this.version = '0.1.5'
+  this.version = '0.1.6'
   this.globalTimerId = null
   this.state = Overtimer.STATES.CREATED
   
@@ -400,6 +400,7 @@ Overtimer.prototype.start = function () {
   this.startedAt = Date.now()
   this.elapsedTime = 0
   this.totalElapsedTime = 0
+  this.pausedTime = 0
   this.overTime = 0
   this.remainingTime = this.options.duration
   this.repeatDuration = this.options.duration

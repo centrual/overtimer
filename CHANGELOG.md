@@ -5,6 +5,9 @@
 - Add code coverage.
 - Better documentation.
 
+## 0.1.6 - 09.04.2017
+- Small bugfix about pause time
+
 ## 0.1.5 - 09.04.2017
 - Updated First two documentation topics written.
 - Added total and repeat percentages with or without delay.
