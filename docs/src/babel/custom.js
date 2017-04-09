@@ -70,8 +70,8 @@ $( function() {
         $('#example2-total-remaining-time').text(`${example2Timer.totalRemainingTime} ms`)
         $('#example2-total-paused').text(`${example2Timer.pausedTime} ms`)
   
-        $('#example2-current-repeat-remaining-time-percentage').progress({ percent: Math.ceil(example2Timer.currentRepeatPercent) })
-        $('#example2-total-remaining-time-percentage').progress({ percent: Math.ceil(example2Timer.totalPercent) })
+        $('#example2-current-repeat-remaining-time-percentage').progress({ percent: Math.round(example2Timer.currentRepeatPercent) })
+        $('#example2-total-remaining-time-percentage').progress({ percent: Math.round(example2Timer.totalPercent) })
       })
       
       example2Timer.on('finish', () => {
